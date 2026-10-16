@@ -1,0 +1,17 @@
+// Página institucional da raiz gfvdata.com (docs/), servida por um Worker só de assets, sem código.
+{
+  "name": "site-raiz",
+  "account_id": "24bbd7ba409d9e38e4636846172bd76d",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./docs",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  },
+  "routes": [
+    { "pattern": "gfvdata.com", "custom_domain": true },
+    { "pattern": "www.gfvdata.com", "custom_domain": true }
+  ],
+  "workers_dev": false,
+  "preview_urls": false
+}

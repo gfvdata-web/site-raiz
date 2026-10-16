@@ -1,0 +1,76 @@
+:root {
+  --papel: #fbfaf5;
+  --grade: rgba(60, 110, 160, 0.09);
+  --tinta: #1f2933;
+  --tinta-suave: #52606d;
+  --margem: #d64545;
+  --destaque: #1f5f8b;
+  --cartao: #ffffff;
+  --borda: #d9dee3;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --papel: #14181d;
+    --grade: rgba(140, 180, 220, 0.07);
+    --tinta: #e4e7eb;
+    --tinta-suave: #9aa5b1;
+    --margem: #e66a6a;
+    --destaque: #7cb7e3;
+    --cartao: #1b2128;
+    --borda: #2f3a45;
+    color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background-color: var(--papel);
+  background-image:
+    linear-gradient(var(--grade) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grade) 1px, transparent 1px);
+  background-size: 24px 24px;
+  color: var(--tinta);
+  font: 17px/1.65 Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+}
+.folha {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 48px 24px 48px 56px;
+  border-left: 2px solid var(--margem);
+  min-height: 100vh;
+}
+header { margin-bottom: 40px; }
+.marca {
+  display: flex; align-items: center; gap: 12px;
+  font: 600 15px/1 ui-monospace, "Cascadia Code", Consolas, monospace;
+  letter-spacing: .04em; color: var(--tinta-suave);
+}
+.marca img { width: 32px; height: 32px; }
+h1 { font-size: 2.2rem; line-height: 1.2; margin: 20px 0 12px; }
+h2 {
+  font: 600 .95rem/1.3 ui-monospace, "Cascadia Code", Consolas, monospace;
+  text-transform: uppercase; letter-spacing: .08em;
+  color: var(--destaque); margin: 40px 0 8px;
+}
+p { margin: 0 0 14px; }
+.lead { font-size: 1.15rem; color: var(--tinta-suave); }
+ul { padding-left: 1.2em; margin: 0 0 14px; }
+li { margin-bottom: 6px; }
+a { color: var(--destaque); text-underline-offset: 3px; overflow-wrap: anywhere; }
+.cartao {
+  background: var(--cartao); border: 1px solid var(--borda);
+  border-radius: 8px; padding: 16px 20px; margin: 16px 0;
+}
+.cartao p:last-child { margin-bottom: 0; }
+.en { font-size: .95rem; color: var(--tinta-suave); }
+footer {
+  margin-top: 56px; padding-top: 16px; border-top: 1px dashed var(--borda);
+  font-size: .85rem; color: var(--tinta-suave);
+}
+@media (max-width: 600px) {
+  body { font-size: 16px; }
+  .folha { padding: 32px 16px 32px 24px; }
+  h1 { font-size: 1.75rem; }
+}

@@ -1,0 +1,45 @@
+name: Publicar site (Cloudflare)
+
+# Cada push na main publica https://gfvdata.com/ (e www) (Worker de assets, pasta docs/).
+# Segredo: CLOUDFLARE_API_TOKEN. Sem ele, avisa e não publica.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-site-raiz
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+    steps:
+      - name: Conferir o token
+        id: token
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "::warning::Secret CLOUDFLARE_API_TOKEN ausente; o site não foi publicado."
+            echo "ok=nao" >> "$GITHUB_OUTPUT"
+          else
+            echo "ok=sim" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/checkout@v7
+        if: steps.token.outputs.ok == 'sim'
+      - uses: actions/setup-node@v7
+        if: steps.token.outputs.ok == 'sim'
+        with:
+          node-version: 22
+      - name: Publicar
+        if: steps.token.outputs.ok == 'sim'
+        # Versão fixa: o wrangler-action instala o wrangler 3, que não aceita Worker só de assets.
+        run: npx --yes wrangler@4.150.0 deploy
+        env:
+          CLOUDFLARE_ACCOUNT_ID: 24bbd7ba409d9e38e4636846172bd76d

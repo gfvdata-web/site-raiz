@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# Checagem do repo. Sem argumento: tudo. Com um arquivo: só o que vale para ele.
+# Silencioso quando passa; sai com 1 e uma mensagem curta quando falha.
+# Sem rede, sem tokens, sem navegador.
+# Chamado pelo hook global (~/.claude/hooks/run-check.sh) depois de cada edição e
+# pelo .githooks/pre-commit (modo completo) antes de cada commit.
+#
+# Cobertura (tests/test_site.py):
+#   Páginas docs/*.html: bem formadas, lang/viewport/title/CSS, description + canonical,
+#     JSON-LD (Organization + WebSite), links locais, nada executável ou externo (CSP),
+#     nenhum link para os subdomínios (página só institucional)
+#   robots.txt, sitemap.xml = páginas indexáveis, security.txt (Expires > 60 dias), _headers
+#   Publicação: wrangler.jsonc (rotas gfvdata.com + www), .github/workflows/deploy.yml
+#   (sem teste: aparência/CSS, deploy e DNS na Cloudflare, Email Routing)
+cd "$(dirname "$0")/.." || exit 1
+alvo="$(printf '%s' "${1:-}" | sed 's#\\#/#g')";alvo="${alvo#"$(pwd -W 2>/dev/null || pwd)/"}"; alvo="${alvo#"$(pwd)/"}"
+export PYTHONDONTWRITEBYTECODE=1 PYTHONIOENCODING=utf-8
+
+case "$alvo" in
+  ""|docs/*|tests/*|wrangler.jsonc|.github/*|scripts/*) ;;
+  *) exit 0 ;;
+esac
+if ! saida="$(python -m unittest -q tests.test_site 2>&1)"; then
+  printf '%s\n' "$saida" | tail -40
+  exit 1
+fi
